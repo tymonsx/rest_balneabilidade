@@ -1,6 +1,6 @@
 # rest_balneabilidade
 
-Servidor Rest em python para servir os dados e funções de predição de balneabilidade das praias de são paulo
+Servidor Rest em python para servir os dados e funções de predição de balneabilidade das praias de São Paulo
 
 ## 1 - Criação do ambiente
 
@@ -8,9 +8,9 @@ Servidor Rest em python para servir os dados e funções de predição de balnea
 conda create -n [nome_do_ambiente]
 ```
 
-Instalar no novo ambiente o “PowerShell Prompt” e o “Jupyter Notebook”
+Instalar no novo ambiente o “PowerShell Prompt” e o “Jupyter Notebook” pelo Anaconda
 
-## 2 - Instalação das principais bibliotecas/frameworks dentro do “PowerShell Prompt”:
+## 2 - Instalação das principais bibliotecas/frameworks:
 
 ### Instalação do Pandas:
 
@@ -24,7 +24,7 @@ conda install -c anaconda pandas
 conda install -c anaconda flask
 ```
 
-### Instalação do Pandas:
+### Instalação do Flask-Cors:
 
 ```
 conda install -c anaconda flask-cors
@@ -32,7 +32,9 @@ conda install -c anaconda flask-cors
 
 ## 3 - Rodar o webservice dentro do “PowerShell Prompt”:
 
-## Dentro do PowerShell Prompt:
+### Dentro do PowerShell Prompt:
 
-\$env:FLASK_APP = "[nome_do_arquivo].py"
+```
+$env:FLASK_APP = "[nome_do_arquivo].py"
 flask run
+```
