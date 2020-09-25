@@ -23,7 +23,8 @@ def retornaTodosResultados():
     print(praia)
     dataFrameCsv = pandas.read_csv('sp_beaches_update.csv')
     print(dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())])
-    conversaoEmLista = dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())].to_numpy().tolist()
+    dataFrameCsv = dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())]
+    conversaoEmLista = dataFrameCsv[['Date','Enterococcus']].to_numpy().tolist()
     response = app.response_class(
         response=json.dumps(conversaoEmLista),
         status=200,
