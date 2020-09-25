@@ -1,8 +1,11 @@
 from flask import Flask, escape, request, jsonify, json
 from markupsafe import escape
 import pandas as pandas
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def hello():
