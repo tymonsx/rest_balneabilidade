@@ -11,13 +11,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def hello():
     return 'Bem vindo!'
     
-##Exemplos de cada rota:
-
-##Todos Resultados: http://localhost:5000/todosResultados?cidade=ubatuba&praia=l%C3%A1zaro
-##Últimas cinco semanas: http://localhost:5000/ultimasCincoSemanas?cidade=ubatuba&praia=l%C3%A1zaro
-##Previsão Próxima Semana: http://localhost:5000/proximaSemana?cidade=ubatuba&praia=l%C3%A1zaro&data=2020-09-14
-##Previsão Próximas 5 Semanas: http://localhost:5000/proximasCincoSemanas?cidade=ubatuba&praia=l%C3%A1zaro&data=2020-09-14
-    
 @app.route('/todosResultados', methods=['GET'])
 def retornaTodosResultados():
     cidade = request.args.get('cidade')
@@ -27,6 +20,21 @@ def retornaTodosResultados():
     dataFrameCsv = pandas.read_csv('sp_beaches_update.csv')
     print(dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())])
     dataFrameCsv = dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())]
+    conversaoEmLista = dataFrameCsv[['Date','Enterococcus']].to_numpy().tolist()
+    response = app.response_class(
+        response=json.dumps(conversaoEmLista),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+@app.route('/resultadosUltimosDoisAnos', methods=['GET'])
+def resultadosUltimosDoisAnos():
+    cidade = request.args.get('cidade')
+    praia = request.args.get('praia')
+    dataFrameCsv = pandas.read_csv('sp_beaches_update.csv')
+    print(dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())])
+    dataFrameCsv = dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())].tail(104)
     conversaoEmLista = dataFrameCsv[['Date','Enterococcus']].to_numpy().tolist()
     response = app.response_class(
         response=json.dumps(conversaoEmLista),
