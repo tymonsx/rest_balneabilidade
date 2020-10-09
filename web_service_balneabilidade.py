@@ -2,6 +2,8 @@ from flask import Flask, escape, request, jsonify, json
 from markupsafe import escape
 import pandas as pandas
 from flask_cors import CORS, cross_origin
+from statsmodels.tsa.statespace.sarimax import SARIMAXResults
+from datetime import date
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -59,22 +61,38 @@ def resultadosUltimosDoisAnos():
     ##)
     ##return response
     
-@app.route('/proximaSemana', methods=['GET'])
-def preveProximaSemana():
-    cidade = request.args.get('cidade')
-    print(cidade)
-    praia = request.args.get('praia')
-    print(praia)
-    data = request.args.get('data')
-    print(data)
-    return 'PRÓXIMA SEMANA - Cidade: {}, Praia: {}, Data: {}'.format(cidade,praia, data)
+##@app.route('/previsaoProximaSemana', methods=['GET'])
+##def preveProximaSemana():
+    ##loaded = SARIMAXResults.load('model.pkl')
+    ##conversaoEmLista = loaded.get_forecast(steps=5).predicted_mean.to_numpy().tolist()
+    ##response = app.response_class(
+        ##response=json.dumps(conversaoEmLista),
+        ##status=200,
+        ##mimetype='application/json'
+    ##)
+    ##return response
     
-@app.route('/proximasCincoSemanas', methods=['GET'])
+@app.route('/previsaoProximasCincoSemanas', methods=['GET'])
 def preveProximasCincoSemanas():
-    cidade = request.args.get('cidade')
-    print(cidade)
-    praia = request.args.get('praia')
-    print(praia)
-    data = request.args.get('data')
-    print(data)
-    return 'PRÓXIMAS 5 SEMANAS - Cidade: {}, Praia: {}, Data: {}'.format(cidade,praia, data)
+    loaded = SARIMAXResults.load('model.pkl')
+    
+    hoje = date.today()
+    ultimaData = date(2020, 3, 15)
+    medicoesInicio = (hoje-ultimaData).days/7
+    numMedicoes=medicoesInicio+5
+    primeiraData='2020-03-22'
+    
+    predicao=loaded.get_forecast(steps=34)
+    predicao.predicted_mean
+    
+    index_date = pandas.date_range(primeiraData, periods = numMedicoes, freq = 'W')
+    forecast_series = pandas.Series(list(predicao.predicted_mean), index = index_date)
+    
+    
+    conversaoEmLista = pandas.DataFrame(data=forecast_series).tail(5).to_numpy().tolist()
+    response = app.response_class(
+        response=json.dumps(conversaoEmLista),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
