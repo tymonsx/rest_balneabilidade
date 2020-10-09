@@ -4,6 +4,7 @@ import pandas as pandas
 from flask_cors import CORS, cross_origin
 from statsmodels.tsa.statespace.sarimax import SARIMAXResults
 from datetime import date
+import numpy as numpy
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -78,18 +79,21 @@ def preveProximasCincoSemanas():
     
     hoje = date.today()
     ultimaData = date(2020, 3, 15)
-    medicoesInicio = (hoje-ultimaData).days/7
+    medicoesInicio = round((hoje-ultimaData).days/7)
     numMedicoes=medicoesInicio+5
     primeiraData='2020-03-22'
     
-    predicao=loaded.get_forecast(steps=34)
+    predicao=loaded.get_forecast(steps=numMedicoes)
     predicao.predicted_mean
     
     index_date = pandas.date_range(primeiraData, periods = numMedicoes, freq = 'W')
-    forecast_series = pandas.Series(list(predicao.predicted_mean), index = index_date)
+    ##forecast_series = pandas.Series(list(predicao.predicted_mean), index = index_date)
     
+    datasStr=numpy.datetime_as_string(index_date, unit='D')
+    print(numpy.column_stack((datasStr,list(predicao.predicted_mean))))
     
-    conversaoEmLista = pandas.DataFrame(data=forecast_series).tail(5).to_numpy().tolist()
+    ##conversaoEmLista = pandas.DataFrame(data=forecast_series).tail(5).to_numpy().tolist()
+    conversaoEmLista = pandas.DataFrame(numpy.column_stack((datasStr,list(predicao.predicted_mean)))).tail(5).to_numpy().tolist()
     response = app.response_class(
         response=json.dumps(conversaoEmLista),
         status=200,
