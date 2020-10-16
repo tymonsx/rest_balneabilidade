@@ -20,7 +20,8 @@ def retornaTodosResultados():
     print(cidade)
     praia = request.args.get('praia')
     print(praia)
-    dataFrameCsv = pandas.read_csv('sp_beaches_update.csv')
+    ##dataFrameCsv = pandas.read_csv('sp_beaches_update.csv')
+    dataFrameCsv = pandas.read_csv('resultados_mais_recentes_sp_beaches.csv')
     print(dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())])
     dataFrameCsv = dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())]
     conversaoEmLista = dataFrameCsv[['Date','Enterococcus']].to_numpy().tolist()
@@ -35,7 +36,8 @@ def retornaTodosResultados():
 def resultadosUltimosDoisAnos():
     cidade = request.args.get('cidade')
     praia = request.args.get('praia')
-    dataFrameCsv = pandas.read_csv('sp_beaches_update.csv')
+    ##dataFrameCsv = pandas.read_csv('sp_beaches_update.csv')
+    dataFrameCsv = pandas.read_csv('resultados_mais_recentes_sp_beaches.csv')
     print(dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())])
     dataFrameCsv = dataFrameCsv[(dataFrameCsv["City"] == cidade.upper()) & (dataFrameCsv["Beach"] == praia.upper())].tail(104)
     conversaoEmLista = dataFrameCsv[['Date','Enterococcus']].to_numpy().tolist()
