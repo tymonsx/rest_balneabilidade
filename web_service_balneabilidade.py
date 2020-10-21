@@ -88,7 +88,10 @@ def preveProximasCincoSemanas():
     predicao=loaded.get_forecast(steps=numMedicoes)
     predicao.predicted_mean
     
-    index_date = pandas.date_range(primeiraData, periods = numMedicoes, freq = 'W')
+    ##index_date = pandas.date_range(primeiraData, periods = numMedicoes, freq = 'W')
+    
+    index_date = pandas.bdate_range(primeiraData, periods = numMedicoes, freq = 'C', weekmask='Mon')
+    
     ##forecast_series = pandas.Series(list(predicao.predicted_mean), index = index_date)
     
     datasStr=numpy.datetime_as_string(index_date, unit='D')
