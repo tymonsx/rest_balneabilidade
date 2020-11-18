@@ -49,7 +49,11 @@ def preveProximasSemanas():
     cidade = request.args.get('cidade')
     praia = request.args.get('praia')
     numPredicoes = request.args.get('numPredicoes')
-    loaded = tf.keras.models.load_model(f'modelos/model{cidade}-{praia}.h5')
+    print(f'cidade:{cidade.upper()}')
+    print(f'praia:{praia.upper()}')
+    model_path = f'modelos/model{cidade.upper()}-{praia.upper()}.h5'
+    print(model_path)
+    loaded = tf.keras.models.load_model(model_path)
     print(loaded.summary())
     dataFrameCsv = pandas.read_csv('resultados_mais_recentes_sp_beaches.csv')
     frequenciasCsv = pandas.read_csv('frequencia_praias.csv')
@@ -71,7 +75,8 @@ def preveProximasSemanas():
     ultimasMedicoes = dataFrameCsv[['Enterococcus']].to_numpy()
     
     arrMed = ultimasMedicoes
-    arrRes = numpy.array([],dtype=int)
+    ##arrRes = numpy.array([],dtype=int)
+    arrRes = numpy.array([])
     
     for cont in range(int(numPredicoes)):
         arrMedFormatado = arrMed.reshape((1, numMed, 1))
@@ -88,7 +93,13 @@ def preveProximasSemanas():
     
     ##print(datasStr)
     
+    arrRes = numpy.clip(arrRes,0, None)
+    
+    arrRes = numpy.array(arrRes,dtype=int)
+    
     arrRes = numpy.column_stack((datasStr, arrRes))
+    
+    
     
     print(arrRes)
     
